@@ -1,2 +1,6 @@
 # SilverBullet-HOTMAIL-SETTINGS
 SETTINGS TO GET VALID HOTMAIL ACCOUNTS (HITS)
+
+
+DOWNLOAD LINK .SVB : https://etextpad.com/a3uk7dhfwr 
+YOUTUBE VIDEO : https://youtu.be/NYZfan9JGq8?si=APz7Jwy3aFULu5YN
