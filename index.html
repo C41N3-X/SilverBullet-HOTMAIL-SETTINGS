@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PARA EL AMOR DE MI VIDA 🌻💞</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to bottom, #ffecd2, #fcb69f);
+      color: #333;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      transition: background 8s ease-in-out;
+    }
+    body.night {
+      background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+      color: white;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .scene {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+      z-index: 10;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.2rem;
+      margin-bottom: 15px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .sunflower {
+      font-size: 5rem;
+      cursor: pointer;
+      user-select: none;
+      margin: 20px;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .sunflower:hover {
+      transform: scale(1.15) rotate(5deg);
+    }
+    .message {
+      background: rgba(255, 255, 255, 0.92);
+      color: #444;
+      padding: 20px;
+      border-radius: 24px;
+      max-width: 90%;
+      margin: 25px auto;
+      font-size: 1.4rem;
+      line-height: 1.5;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s, transform 1s;
+    }
+    body.night .message {
+      background: rgba(10, 10, 30, 0.85);
+      color: #ffeb99;
+    }
+    .message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .constellation {
+      display: none;
+      margin: 30px 0;
+    }
+    body.night .constellation {
+      display: block;
+    }
+    .star {
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 12px 2px white;
+      position: absolute;
+      cursor: pointer;
+    }
+    .final-letter {
+      display: none;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 30px;
+      border-radius: 25px;
+      max-width: 80%;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      line-height: 1.6;
+    }
+    button {
+      background: #FFD700;
+      border: none;
+      padding: 14px 36px;
+      font-size: 1.3rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: bold;
+      margin-top: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      background: #FFC400;
+    }
+    body.night button {
+      background: #4a9eff;
+    }
+    body.night button:hover {
+      background: #3a8af0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <div class="scene" id="main">
+    <h1>🌻 Para ti bb </h1>
+    <p>Toca los girasoles pitufa linda jjs</p>
+    
+    <div class="sunflower" data-msg="Amo que seas a quien amo tanto">🌻</div>
+    <div class="sunflower" data-msg="Mira jjs aquí esta el amor de tu vida .. YO ">🌻</div>
+    <div class="sunflower" data-msg="Te amo morena hermosa">🌻</div>
+
+    <div class="message" id="msg"></div>
+
+    <div class="constellation" id="constellation"></div>
+
+    <div class="final-letter" id="finalLetter">
+      Cristal,<br>
+      No necesito mil vidas.<br>
+      Solo necesito esta... contigo.<br><br>
+      — TE AMO PITUFA JJS 🤍
+    </div>
+  </div>
+
+  <!-- Música ambiental libre de derechos -->
+  <audio id="bgMusic" loop>
+    <source src="https://download1529.mediafire.com/taxupf8c95igkXi74VBlPuYqYGGteLhm9uDlRs8j5q2SeEXjn8qjqXtOelWLIQLpp9uR6hvv-dhSi3l9qit_l75IhCBHjAAuipxx_LlmPfDB4XHkvpY7_tH1efxW2Dj4x95bZXkF1M4MyQZHiBIMsHzRKTPYlWR4f4rzB3ob7iVwIFi9/18nm8mlm5bms3hy/h.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Partículas de fondo (polvo de sol / brillos)
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const particleCount = window.innerWidth > 768 ? 80 : 40;
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        color: document.body.classList.contains('night') ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 215, 0, 0.6)'
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
+          p.x = Math.random() * canvas.width;
+          p.y = Math.random() * canvas.height;
+        }
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    // Interacción con girasoles
+    let memoriesCollected = 0;
+    const sunflowers = document.querySelectorAll('.sunflower');
+    const msgBox = document.getElementById('msg');
+    const bgMusic = document.getElementById('bgMusic');
+
+    sunflowers.forEach(sf => {
+      sf.addEventListener('click', () => {
+        if (sf.classList.contains('used')) return;
+        
+        sf.classList.add('used');
+        sf.style.transform = 'scale(1.3)';
+        setTimeout(() => sf.style.transform = '', 300);
+        
+        const msg = sf.getAttribute('data-msg');
+        msgBox.textContent = msg;
+        msgBox.classList.add('show');
+        
+        memoriesCollected++;
+        
+        // Reproducir música suave al primer clic
+        if (memoriesCollected === 1) {
+          bgMusic.volume = 0.3;
+          bgMusic.play().catch(e => console.log("Audio autoplay blocked – normal on mobile"));
+        }
+
+        if (memoriesCollected === 3) {
+          // Transición a noche
+          setTimeout(() => {
+            document.body.classList.add('night');
+            updateParticlesForNight();
+            msgBox.classList.remove('show');
+            
+            // Mostrar constelación
+            createConstellation();
+          }, 2000);
+        }
+      });
+    });
+
+    function updateParticlesForNight() {
+      particles.forEach(p => {
+        p.color = 'rgba(255, 255, 255, 0.8)';
+        p.speedX = (Math.random() - 0.5) * 0.2;
+        p.speedY = (Math.random() - 0.5) * 0.2;
+      });
+    }
+
+    function createConstellation() {
+      const constel = document.getElementById('constellation');
+      const positions = [
+        {top: '25%', left: '30%'},
+        {top: '40%', right: '25%'},
+        {bottom: '30%', left: '40%'},
+        {bottom: '20%', right: '35%'}
+      ];
+      
+      positions.forEach((pos, i) => {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.top = pos.top;
+        star.style.left = pos.left;
+        star.dataset.index = i;
+        star.addEventListener('click', () => {
+          star.style.background = '#FFD700';
+          star.style.boxShadow = '0 0 20px #FFD700';
+          star.classList.add('connected');
+          
+          if (document.querySelectorAll('.star.connected').length === 4) {
+            showFinalLetter();
+          }
+        });
+        constel.appendChild(star);
+      });
+    }
+
+    function showFinalLetter() {
+      document.getElementById('finalLetter').style.display = 'block';
+      document.querySelector('.constellation').style.display = 'none';
+      document.querySelector('h1').textContent = '☀️🌙 Siempre';
+      document.querySelector('p').textContent = '';
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
